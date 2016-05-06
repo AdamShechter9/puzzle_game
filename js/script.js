@@ -1,45 +1,98 @@
-function changeImage (imgN) {
-	var $imageName = $(imgN);
-	var altsrc1 = $imageName.attr('data-alt-src');
-	var altsrctemp1 = $imageName.attr('src');
-	$imageName.attr('src', altsrc1);
-	$imageName.attr('data-alt-src', altsrctemp1);
+var Images = {
+	imgsDB: 
+	[
+	["funny-cat1_part1x1.jpg", 
+	"funny-cat1_part2x1.jpg", 
+	"funny-cat1_part3x1.jpg", 
+	"funny-cat1_part4x1.jpg", 
+	"funny-cat1_part5x1.jpg"],
+	["monkey_part1x1.jpg",
+	"monkey_part2x1.jpg",
+	"monkey_part3x1.jpg",
+	"monkey_part4x1.jpg",
+	"monkey_part5x1.jpg"],
+	["panda_swap_part1x1.jpg",
+	"panda_swap_part2x1.jpg",
+	"panda_swap_part3x1.jpg",
+	"panda_swap_part4x1.jpg",
+	"panda_swap_part5x1.jpg"]
+	],
+	imgpos: [0, 0, 0, 0, 0]
+	
 }
 
-function randomImg () {
-	for (var i=1; i <= 15; i++) {
-		var num1 = Math.floor ((Math.random() * 5) + 1);
-		console.log("number = " + num1);
-		var str1 = "#img" + num1.toString();	
-		changeImage(str1);
+function placeImage(imgpos1, imgToggle) {
+	Images.imgpos[imgpos1 - 1] = imgToggle;        // Set image pointer in Object array
+	var imageName = "#img" + imgpos1.toString();   // create JQUERY handler
+	$(imageName).attr("src", "./img/" + Images.imgsDB[imgToggle][imgpos1 - 1]);
+
+}
+
+function setImagesRandom() {
+	for (var i=1; i <= 5; i++)
+	{
+		var num1 = Math.floor ((Math.random() * 3));
+		placeImage(i, num1);
+	}
+}
+
+function imageClick(imgpos1) {
+	var imgToggle = Images.imgpos[imgpos1 - 1];
+	if (imgToggle === 0) {
+		placeImage(imgpos1, 1);
+	}
+	else if (imgToggle === 1) {
+		placeImage(imgpos1, 2);
+	}
+	else if (imgToggle === 2) {
+		placeImage(imgpos1, 0);
+	}
+	
+}
+
+function checkSet() {
+	var setImg = Images.imgpos[0];
+	var setFlag = true;
+	for (var i=1; i < 5; i++)
+	{
+		if (Images.imgpos[i] !== Images.imgpos[i - 1]) {
+			setFlag = false;
+		}
+	}
+
+	if (setFlag) {
+		$('img').css("box-shadow", "4px 4px 9px red")
+	}
+	else {
+		$('img').css("box-shadow", "2px 3px 3px black")
 	}
 }
 
 var main = function () 
 {
 
-	randomImg();
+	setImagesRandom();
 
-	$("img").click( function () {
-		if ($(this).is("#img1")) {
-			changeImage("#img1");
-		}
-		else if ($(this).is("#img2")) {
-			changeImage("#img2");
-		}
-		else if ($(this).is("#img3")) {
-			changeImage("#img3");
-		}
-		else if ($(this).is("#img4")) {
-			changeImage("#img4");
-		}
-		else if ($(this).is("#img5")) {
-			changeImage("#img5");
-		};
-		
-	});
-
-
+	$("#img1").click(function(){
+		imageClick(1);
+		checkSet();
+	})
+	$("#img2").click(function(){
+		imageClick(2);
+		checkSet();
+	})
+	$("#img3").click(function(){
+		imageClick(3);
+		checkSet();
+	})
+	$("#img4").click(function(){
+		imageClick(4);
+		checkSet();
+	})
+	$("#img5").click(function(){
+		imageClick(5);
+		checkSet();
+	})
 
 }
 
